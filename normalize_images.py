@@ -69,7 +69,6 @@ def normalize_folder(folder_path, stats_df):
 
     print(f"Normalizing images in folder: {folder_path}")
 
-    # Use a ThreadPoolExecutor to process the normalization in parallel
     with ThreadPoolExecutor() as executor:
         futures = []
         for file in tif_files:
@@ -78,4 +77,18 @@ def normalize_folder(folder_path, stats_df):
                 executor.submit(process_and_save_image, file_path, means, stds, num_bands, normalized_base_folder,
                                 folder_path))
 
-        for future in tqdm(as
+        for future in tqdm(as_completed(futures), total=len(futures), desc="Normalizing files", unit="file"):
+            future.result()
+
+
+def normalize_images():
+    """Main function to normalize images using statistics from CSV files."""
+    for folder in config.folders:
+        csv_path = f"{folder}{config.csv_suffix}"  # Fixed by adding a separator before config.csv_suffix
+        stats_df = load_stats_from_csv(csv_path)
+        normalize_folder(folder, stats_df)
+
+
+# If you want this script to run standalone as well
+if __name__ == "__main__":
+    normalize_images()
