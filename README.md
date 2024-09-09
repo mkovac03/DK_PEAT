@@ -23,7 +23,7 @@ Note: The scripts process `.tif` files **only from the specified folder** and do
 1. **Clone the repository**:
    ```bash
    git clone https://github.com/mkovac03/DK_PEAT
-   cd image-normalization
+   cd DK_PEAT
    ```
 
 2. **Install the required dependencies**:  
