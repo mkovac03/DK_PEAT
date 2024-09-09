@@ -41,7 +41,6 @@ def compute_global_mean_std(folder_path):
                 pixels[band - 1] = image.size
             return sums, sums_sq, pixels
 
-    # Use a ThreadPool to process files in parallel
     with ThreadPoolExecutor() as executor:
         futures = {executor.submit(process_file, os.path.join(folder_path, file)): file for file in tif_files}
         for future in tqdm(as_completed(futures), total=len(futures), desc="Processing files", unit="file"):
@@ -76,8 +75,14 @@ def save_stats_to_csv(folder_path, mean, std, num_bands):
     print(f"Saved statistics for folder: {folder_path} to {csv_path}")
 
 
-# Calculate statistics for each folder and save to separate CSVs
-for folder in config.folders:
-    mean, std, num_bands = compute_global_mean_std(folder)
-    if mean is not None:
-        save_stats_to_csv(folder, mean, std, num_bands)
+def calculate_stats():
+    """Main function to calculate stats for all folders in config."""
+    for folder in config.folders:
+        mean, std, num_bands = compute_global_mean_std(folder)
+        if mean is not None:
+            save_stats_to_csv(folder, mean, std, num_bands)
+
+
+# If you want this script to run standalone as well
+if __name__ == "__main__":
+    calculate_stats()
