@@ -1,4 +1,3 @@
-Here’s an updated version of the `README.md` file, reflecting the changes where the `calculate_stats.py` script now skips processing if the CSV file already exists:
 
 ---
 
